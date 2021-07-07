@@ -28,10 +28,7 @@ class CustomCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        progressBar.progress = 0
-        percentLabel.isHidden = true
-        imageViewButton.isHidden = true
-        downloadedImageView.contentMode = .scaleAspectFit
+        configureCell()
     }
     
     @IBAction func downloadButtonTapped(_ sender: UIButton) {
@@ -49,4 +46,22 @@ class CustomCell: UITableViewCell {
         delegate?.imageViewButtonTapped(tag: sender.tag)
     }
     
+    func configureCell() {
+        progressBar.progress = 0
+        percentLabel.isHidden = true
+        imageViewButton.isHidden = true
+        downloadedImageView.contentMode = .scaleAspectFit
+    }
+    
+    
+    func configureCellForReuse() {
+        downloadedImageView.contentMode = .scaleAspectFill
+        imageViewButton.isHidden = false
+        cancelButton.isHidden = true
+        downloadButton.isHidden = true
+        resumeButton.isHidden = true
+        percentLabel.isHidden = false
+        percentLabel.text = "100%"
+        progressBar.progress = 1
+    }
 }

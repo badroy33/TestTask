@@ -31,9 +31,9 @@ class TableViewController: UITableViewController, CustomCellDelegate {
                            "https://images.pexels.com/photos/1540258/pexels-photo-1540258.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
     ]
     
-    let downloadManager = DownloadManager()
+    private let downloadManager = DownloadManager()
     
-    let imageCache = NSCache<AnyObject, AnyObject>()
+    private let imageCache = NSCache<AnyObject, AnyObject>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,15 +61,8 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         cell.cancelButton.tag = indexPath.row
         cell.imageViewButton.tag = indexPath.row
         if let image = imageCache.object(forKey: imageUrlString[indexPath.row] as NSString) as? UIImage{
-            cell.downloadedImageView.contentMode = .scaleAspectFill
             cell.downloadedImageView.image = image
-            cell.imageViewButton.isHidden = false
-            cell.cancelButton.isHidden = true
-            cell.downloadButton.isHidden = true
-            cell.resumeButton.isHidden = true
-            cell.percentLabel.isHidden = false
-            cell.percentLabel.text = "100%"
-            cell.progressBar.progress = 1
+            cell.configureCellForReuse()
         }
         
         return cell
