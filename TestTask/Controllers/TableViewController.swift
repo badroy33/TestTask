@@ -8,7 +8,7 @@
 import UIKit
 
 class TableViewController: UITableViewController, CustomCellDelegate {
-
+    
     let imageUrlString = [ "https://images.pexels.com/photos/1525041/pexels-photo-1525041.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
                            "https://lh4.googleusercontent.com/proxy/W77hecSbOlUrrUgLm9dZeEP_Bjj8y0y0TTJMAoEJIYog1hwwuWkHnozaO1qFUUniqTo7ZnImARSVXUSe0iFck64OFdB3wXARPD448tjCHqW2ZCY7fBi-1EKEPuLE-95M5NPdSWqQIizaqphmsKWU_LQ5OQvT04FQ=s0-d",
                            "https://wallpapermemory.com/uploads/729/batman-arkham-knight-background-ultra-hd-8k-174195.jpg",
@@ -30,7 +30,7 @@ class TableViewController: UITableViewController, CustomCellDelegate {
                            "https://images.pexels.com/photos/3052361/pexels-photo-3052361.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
                            "https://images.pexels.com/photos/1540258/pexels-photo-1540258.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
     ]
-
+    
     let downloadManager = DownloadManager()
     
     let imageCache = NSCache<AnyObject, AnyObject>()
@@ -51,7 +51,7 @@ class TableViewController: UITableViewController, CustomCellDelegate {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomCell
+        //        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomCell
         let cell = Bundle.main.loadNibNamed(CustomCell.idendifire, owner: self, options: nil)?[0] as! CustomCell
         cell.nameLabel.text = "Image \(indexPath.row)"
         cell.urlString = imageUrlString[indexPath.row]
@@ -80,12 +80,11 @@ class TableViewController: UITableViewController, CustomCellDelegate {
                 cell.downloadedImageView.image = image
             }
             
+            
             cell.downloadManager.onProgress = { progress in
-                cell.downloadManager.onProgress = { progress in
-                    cell.percentLabel.isHidden = false
-                    cell.percentLabel.text = "\(Int(progress * 100))%"
-                    cell.progressBar.progress = progress
-                }
+                cell.percentLabel.isHidden = false
+                cell.percentLabel.text = "\(Int(progress * 100))%"
+                cell.progressBar.progress = progress
             }
             
             cell.downloadManager.finished = { finished in
@@ -98,7 +97,7 @@ class TableViewController: UITableViewController, CustomCellDelegate {
             }
         }
         
-
+        
     }
     
     func resumeButtonTapped(tag: Int) {
