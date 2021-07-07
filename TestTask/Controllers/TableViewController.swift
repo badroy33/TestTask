@@ -61,6 +61,7 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         cell.cancelButton.tag = indexPath.row
         cell.imageViewButton.tag = indexPath.row
         if let image = imageCache.object(forKey: imageUrlString[indexPath.row] as NSString) as? UIImage{
+            cell.downloadedImageView.contentMode = .scaleAspectFill
             cell.downloadedImageView.image = image
             cell.imageViewButton.isHidden = false
             cell.cancelButton.isHidden = true
@@ -84,9 +85,9 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         DispatchQueue.main.async {
             cell.downloadManager.image = { image in
                 self.imageCache.setObject(image, forKey: self.imageUrlString[tag] as NSString)
+                cell.downloadedImageView.contentMode = .scaleAspectFill
                 cell.downloadedImageView.image = image
             }
-            
             
             cell.downloadManager.onProgress = { progress in
                 cell.percentLabel.isHidden = false
@@ -103,8 +104,6 @@ class TableViewController: UITableViewController, CustomCellDelegate {
                 }
             }
         }
-        
-        
     }
     
     func resumeButtonTapped(tag: Int) {
@@ -131,9 +130,6 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         
         present(detailVC, animated: true, completion: nil)
     }
-    
-    
-    
 }
 
 

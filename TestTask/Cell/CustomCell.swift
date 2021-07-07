@@ -25,13 +25,13 @@ class CustomCell: UITableViewCell {
     var delegate: CustomCellDelegate?
     
     var urlString: String!
-    var image: UIImage?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         progressBar.progress = 0
         percentLabel.isHidden = true
         imageViewButton.isHidden = true
+        downloadedImageView.contentMode = .scaleAspectFit
     }
     
     @IBAction func downloadButtonTapped(_ sender: UIButton) {
