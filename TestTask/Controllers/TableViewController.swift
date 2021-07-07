@@ -53,7 +53,7 @@ class TableViewController: UITableViewController, CustomCellDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomCell
         let cell = Bundle.main.loadNibNamed(CustomCell.idendifire, owner: self, options: nil)?[0] as! CustomCell
-        cell.nameLabel.text = "Image \(indexPath.row)"
+        cell.nameLabel.text = "Image \(indexPath.row + 1)"
         cell.urlString = imageUrlString[indexPath.row]
         cell.delegate = self
         cell.downloadButton.tag = indexPath.row
@@ -62,6 +62,13 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         cell.imageViewButton.tag = indexPath.row
         if let image = imageCache.object(forKey: imageUrlString[indexPath.row] as NSString) as? UIImage{
             cell.downloadedImageView.image = image
+            cell.imageViewButton.isHidden = false
+            cell.cancelButton.isHidden = true
+            cell.downloadButton.isHidden = true
+            cell.resumeButton.isHidden = true
+            cell.percentLabel.isHidden = false
+            cell.percentLabel.text = "100%"
+            cell.progressBar.progress = 1
         }
         
         return cell
