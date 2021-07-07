@@ -31,8 +31,6 @@ class TableViewController: UITableViewController, CustomCellDelegate {
                            "https://images.pexels.com/photos/1540258/pexels-photo-1540258.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
     ]
     
-    private let downloadManager = DownloadManager()
-    
     private let imageCache = NSCache<AnyObject, AnyObject>()
     
     override func viewDidLoad() {
