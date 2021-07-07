@@ -75,26 +75,24 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         let indexPath = IndexPath(row: tag, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as! CustomCell
         cell.downloadManager.downloadTask(stringUrl: imageUrlString[tag])
-        DispatchQueue.main.async {
-            cell.downloadManager.image = { image in
-                self.imageCache.setObject(image, forKey: self.imageUrlString[tag] as NSString)
-                cell.downloadedImageView.contentMode = .scaleAspectFill
-                cell.downloadedImageView.image = image
-            }
-            
-            cell.downloadManager.onProgress = { progress in
-                cell.percentLabel.isHidden = false
-                cell.percentLabel.text = "\(Int(progress * 100))%"
-                cell.progressBar.progress = progress
-            }
-            
-            cell.downloadManager.finished = { finished in
-                if finished {
-                    cell.imageViewButton.isHidden = false
-                    cell.downloadButton.isHidden = true
-                    cell.cancelButton.isHidden = true
-                    cell.resumeButton.isHidden = true
-                }
+        cell.downloadManager.image = { image in
+            self.imageCache.setObject(image, forKey: self.imageUrlString[tag] as NSString)
+            cell.downloadedImageView.contentMode = .scaleAspectFill
+            cell.downloadedImageView.image = image
+        }
+        
+        cell.downloadManager.onProgress = { progress in
+            cell.percentLabel.isHidden = false
+            cell.percentLabel.text = "\(Int(progress * 100))%"
+            cell.progressBar.progress = progress
+        }
+        
+        cell.downloadManager.finished = { finished in
+            if finished {
+                cell.imageViewButton.isHidden = false
+                cell.downloadButton.isHidden = true
+                cell.cancelButton.isHidden = true
+                cell.resumeButton.isHidden = true
             }
         }
     }
@@ -119,7 +117,6 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let detailVC = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
         detailVC.image = image
-        
         
         present(detailVC, animated: true, completion: nil)
     }
