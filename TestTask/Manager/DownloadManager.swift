@@ -12,7 +12,8 @@ class DownloadManager: NSObject, URLSessionDownloadDelegate {
     var onProgress: ((Float) -> ())?
     var image: ((UIImage) -> ())?
     var finished: ((Bool) -> ())?
-    var taskStoped: Bool = false
+    private var taskStoped: Bool = false
+    private var taskStarted: Bool = false
     
     private var task: URLSessionDownloadTask?
     private var session: URLSession {
@@ -23,13 +24,14 @@ class DownloadManager: NSObject, URLSessionDownloadDelegate {
     
     
     func downloadTask(stringUrl: String) {
-        if !taskStoped {
+        if !taskStoped, !taskStarted {
             guard let url = URL(string: stringUrl) else {
                 print("Can't get url")
                 return
             }
             task = session.downloadTask(with: url)
             task?.resume()
+            taskStarted = true
         }
     }
     
@@ -45,13 +47,15 @@ class DownloadManager: NSObject, URLSessionDownloadDelegate {
     }
     
     func resumeDownload() {
-        guard let data = resumeData else {
-            print("Download can't be resumed")
-            return
+        if taskStoped {
+            guard let data = resumeData else {
+                print("Download can't be resumed")
+                return
+            }
+            
+            task = session.downloadTask(withResumeData: data)
+            task?.resume()
         }
-        
-        task = session.downloadTask(withResumeData: data)
-        task?.resume()
     }
     
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {

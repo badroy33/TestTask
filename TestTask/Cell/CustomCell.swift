@@ -24,15 +24,17 @@ class CustomCell: UITableViewCell {
     
     var delegate: CustomCellDelegate?
     
+    var progress: Float?
+    
     var urlString: String!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        configureCell()
     }
     
     @IBAction func downloadButtonTapped(_ sender: UIButton) {
         delegate?.downloadButtonTappped(tag: sender.tag)
+        self.downloadButton.isHidden = true
     }
     
     @IBAction func resumeButtonTapped(_ sender: UIButton) {
@@ -47,10 +49,10 @@ class CustomCell: UITableViewCell {
     }
     
     func configureCell() {
-        progressBar.progress = 0
-        percentLabel.isHidden = true
         imageViewButton.isHidden = true
         downloadedImageView.contentMode = .scaleAspectFit
+        progressBar.progress = 0
+        percentLabel.text = ""
     }
     
     
@@ -64,4 +66,12 @@ class CustomCell: UITableViewCell {
         percentLabel.text = "100%"
         progressBar.progress = 1
     }
+    
+    func configureCellWhileDownloading() {
+        percentLabel.text = "\(Int(progress! * 100))%"
+        progressBar.progress = progress!
+        downloadButton.isHidden = true
+        downloadedImageView.contentMode = .scaleAspectFit
+    }
+    
 }

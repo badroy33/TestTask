@@ -32,6 +32,7 @@ class TableViewController: UITableViewController, CustomCellDelegate {
     ]
     
     private let imageCache = NSCache<AnyObject, AnyObject>()
+    private var progressCache: [String: Float] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,14 +54,21 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         let cell = Bundle.main.loadNibNamed(CustomCell.idendifire, owner: self, options: nil)?[0] as! CustomCell
         cell.nameLabel.text = "Image \(indexPath.row + 1)"
         cell.urlString = imageUrlString[indexPath.row]
+        cell.configureCell()
         cell.delegate = self
         cell.downloadButton.tag = indexPath.row
         cell.resumeButton.tag = indexPath.row
         cell.cancelButton.tag = indexPath.row
         cell.imageViewButton.tag = indexPath.row
+        
         if let image = imageCache.object(forKey: imageUrlString[indexPath.row] as NSString) as? UIImage{
             cell.downloadedImageView.image = image
             cell.configureCellForReuse()
+        }else if let progress = progressCache[imageUrlString[indexPath.row]] {
+            cell.progress = progress
+            cell.percentLabel.text = "\(Int(progress * 100))%"
+            cell.progressBar.progress = progress
+            cell.configureCellWhileDownloading()
         }
         
         return cell
@@ -80,6 +88,8 @@ class TableViewController: UITableViewController, CustomCellDelegate {
         }
         
         cell.downloadManager.onProgress = { progress in
+            
+            self.progressCache[self.imageUrlString[tag]] = progress
             cell.percentLabel.isHidden = false
             cell.percentLabel.text = "\(Int(progress * 100))%"
             cell.progressBar.progress = progress
@@ -98,7 +108,20 @@ class TableViewController: UITableViewController, CustomCellDelegate {
     func resumeButtonTapped(tag: Int) {
         let indexPath = IndexPath(row: tag, section: 0)
         let cell = tableView.cellForRow(at: indexPath) as! CustomCell
+        
+//        if let progress = progressCache[imageUrlString[indexPath.row]] {
+//            cell.progressBar.progress = progress
+//            cell.percentLabel.text = ""
+//        } else { print("no data") }
         cell.downloadManager.resumeDownload()
+        
+        cell.downloadManager.onProgress = { progress in
+            
+            self.progressCache[self.imageUrlString[tag]] = progress
+            cell.percentLabel.isHidden = false
+            cell.percentLabel.text = "\(Int(progress * 100))%"
+            cell.progressBar.progress = progress
+        }
     }
     
     func cancelButtonTapped(tag: Int) {
